@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js'
 import {Button} from "./game_objects/ui/Button";
+import {SlotContainer} from "./game_objects/SlotContainer";
 
 export class App {
     readonly app: PIXI.Application;
@@ -7,6 +8,7 @@ export class App {
     static readonly CANVAS_HEIGHT = 768;
 
     private spinButton: Button | undefined;
+    private slotContainer: SlotContainer | undefined;
 
     constructor() {
         this.app = new PIXI.Application({
@@ -40,11 +42,20 @@ export class App {
 
     private buildScene(): void {
         this.addSpinButton();
+        this.addSlots();
     }
 
     private addSpinButton(): void {
         this.spinButton = new Button(this.app);
         this.spinButton.show();
+        this.spinButton.setOnClick(e => {
+
+        });
+    }
+
+    private addSlots(): void {
+        this.slotContainer = new SlotContainer(this.app);
+        this.slotContainer.show();
     }
 
     private gameLoop(delta: number): void {

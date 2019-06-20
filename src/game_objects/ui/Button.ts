@@ -4,24 +4,32 @@ import {TextureMap} from "./TextureMap";
 import {App} from "../../App";
 import {DrawableObject} from "../DrawableObject";
 
-export class Button extends DrawableObject{
+export class Button extends DrawableObject {
     private static baseTexturePath: string = 'images/ui/btn_spin_';
+    private static textures: TextureMap = {};
+    private static isTextureMapInited: boolean = false;
 
-    private textures: TextureMap = {};
-
-    private container: PIXI.Container;
-
+    protected sprite: PIXI.Sprite;
+    readonly container: PIXI.Container;
     private state: ButtonState = ButtonState.NORMAL;
 
     constructor(app: PIXI.Application) {
         super(app);
         this.container = new PIXI.Container();
-        Object.values(ButtonState).forEach(((value: ButtonState) => {
-            this.textures[value] = PIXI.Loader.shared.resources[Button.getTexturePath(value)].texture;
-        }));
+        this.sprite = new PIXI.Sprite(PIXI.Loader.shared.resources[Button.getDefaultTextureName()].texture);
+        if (!Button.isTextureMapInited) {
+            Button.initTextureMap();
+        }
     }
 
-    protected getDefaultTextureName(): string {
+    private static initTextureMap(): void {
+        Object.values(ButtonState).forEach(((value: ButtonState) => {
+            Button.textures[value] = PIXI.Loader.shared.resources[Button.getTexturePath(value)].texture;
+        }));
+        Button.isTextureMapInited = true;
+    }
+
+    protected static getDefaultTextureName(): string {
         return Button.getTexturePath(ButtonState.NORMAL);
     }
 
@@ -47,6 +55,40 @@ export class Button extends DrawableObject{
         text.y = this.container.height / 4;
         text.x = this.container.width / 2;
         this.container.addChild(text);
+        this.initHandlers();
         this.app.stage.addChild(this.container);
+    }
+
+    private initHandlers(): void {
+        this.sprite.interactive = true;
+        this.sprite.addListener('mouseover', e => {
+            if (this.state !== ButtonState.HOVER && this.state !== ButtonState.DISABLED) {
+                this.setState(ButtonState.HOVER);
+            }
+        });
+        this.sprite.addListener('mousedown', e => {
+            if (this.state !== ButtonState.PRESSED && this.state !== ButtonState.DISABLED) {
+                this.setState(ButtonState.PRESSED);
+            }
+        });
+        this.sprite.addListener('mouseout', e => {
+            if (this.state === ButtonState.PRESSED || this.state === ButtonState.HOVER) {
+                this.setState(ButtonState.NORMAL);
+            }
+        });
+        this.sprite.addListener('mouseup', e => {
+            if (this.state === ButtonState.PRESSED) {
+                this.setState(ButtonState.DISABLED);
+            }
+        });
+    }
+
+    setState(state: ButtonState): void {
+        this.state = state;
+        this.sprite.texture = Button.textures[state];
+    }
+
+    setOnClick(func: ((e: PIXI.interaction.InteractionEvent) => void)): void {
+        this.sprite.addListener('click', func);
     }
 }
