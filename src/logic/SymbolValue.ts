@@ -1,4 +1,4 @@
-export enum SlotValue {
+export enum SymbolValue {
     LION = 1,
     MONKEY = 2,
     EAGLE = 3,

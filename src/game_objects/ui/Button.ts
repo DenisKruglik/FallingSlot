@@ -76,16 +76,15 @@ export class Button extends DrawableObject {
                 this.setState(ButtonState.NORMAL);
             }
         });
-        this.sprite.addListener('mouseup', e => {
-            if (this.state === ButtonState.PRESSED) {
-                this.setState(ButtonState.DISABLED);
-            }
-        });
     }
 
     setState(state: ButtonState): void {
         this.state = state;
         this.sprite.texture = Button.textures[state];
+    }
+
+    getState(): ButtonState {
+        return this.state;
     }
 
     setOnClick(func: ((e: PIXI.interaction.InteractionEvent) => void)): void {

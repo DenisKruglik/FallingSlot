@@ -2,8 +2,9 @@
   "name": "falling-slot",
   "version": "1.0.0",
   "dependencies": {
-    "pixi.js": "^5.0.4",
-    "howler": "^2.1.2"
+    "@types/howler": "^2.1.0",
+    "howler": "^2.1.2",
+    "pixi.js": "^5.0.4"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
