@@ -48,7 +48,7 @@ export class SymbolContainer extends DrawableObject {
         SymbolContainer.isTextureMapInited = true;
     }
 
-    private static getRandomTexture(): PIXI.Texture {
+    static getRandomTexture(): PIXI.Texture {
         let allowedValues = Object.values(SymbolValue).filter(value => typeof value === 'number');
         let value: SymbolValue = allowedValues[Math.floor(Math.random() * allowedValues.length)];
         return PIXI.Loader.shared.resources[SymbolContainer.getTexturePath(value)].texture;

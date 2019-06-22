@@ -11,6 +11,9 @@ export class App {
     readonly app: PIXI.Application;
     static readonly CANVAS_WIDTH = 1024;
     static readonly CANVAS_HEIGHT = 768;
+    static readonly DELAY_BETWEEN_ROWS = 200;
+    static readonly DELAY_BETWEEN_SYMBOLS = 100;
+    static readonly SLOT_ACCELERATION = 10;
 
     private spinButton: Button | undefined;
     private symbolContainer: SymbolContainer | undefined;
@@ -57,12 +60,10 @@ export class App {
         this.spinButton = new Button(this.app);
         this.spinButton.show();
         this.spinButton.setOnClick(e => {
-            // @ts-ignore
-            if (this.spinButton.getState() !== ButtonState.DISABLED) {
+            if ((this.spinButton as Button).getState() !== ButtonState.DISABLED) {
                 this.sound.playButtonClickSound();
                 this.gameState = new FallDown(this);
-                // @ts-ignore
-                this.spinButton.setState(ButtonState.DISABLED);
+                (this.spinButton as Button).setState(ButtonState.DISABLED);
             }
         });
     }
@@ -82,6 +83,10 @@ export class App {
 
     get symbols(): SymbolContainer | undefined {
         return this.symbolContainer;
+    }
+
+    get sounds(): Sound {
+        return this.sound;
     }
 
     setGameState(state: GameState) {
